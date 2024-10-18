@@ -83,25 +83,14 @@ FreehandMode.simplify = function (polygon) {
 };
 
 FreehandMode.onStop = function (state) {
-  // Mimic DrawPolygon.onStop logic here
-  this.updateUIClasses({ mouse: cursors.NONE });
-  doubleClickZoom.enable(this);
-  this.activateUIButton();
-
-  // Check if the feature was deleted
-  if (!this.getFeature(state.polygon.id)) return;
-
-  // Remove last added coordinate
-  state.polygon.removeCoordinate(`0.${state.currentVertexPosition}`);
-  if (state.polygon.isValid()) {
-    this.fire(events.CREATE, {
-      features: [state.polygon.toGeoJSON()],
-    });
-  } else {
-    this.deleteFeature([state.polygon.id], { silent: true });
-    this.changeMode(modes.SIMPLE_SELECT, {}, { silent: true });
+  // If draw_polygon has an onStop method, you can invoke it like this:
+  const polygonMode = MapboxGlDraw.modes.draw_polygon;
+  
+  if (polygonMode.onStop) {
+    polygonMode.onStop.call(this, state);  // Call the onStop method with the correct context
   }
 
+  // Re-enable dragPan
   setTimeout(() => {
     if (!this.map || !this.map.dragPan) return;
     this.map.dragPan.enable();
