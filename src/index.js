@@ -83,14 +83,7 @@ FreehandMode.simplify = function (polygon) {
 };
 
 FreehandMode.onStop = function (state) {
-  // If draw_polygon has an onStop method, you can invoke it like this:
-  const polygonMode = MapboxGlDraw.modes.draw_polygon;
-  
-  if (polygonMode.onStop) {
-    polygonMode.onStop.call(this, state);  // Call the onStop method with the correct context
-  }
-
-  // Re-enable dragPan
+  // DrawPolygon.call(this, state)
   setTimeout(() => {
     if (!this.map || !this.map.dragPan) return;
     this.map.dragPan.enable();
