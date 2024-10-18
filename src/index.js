@@ -83,7 +83,25 @@ FreehandMode.simplify = function (polygon) {
 };
 
 FreehandMode.onStop = function (state) {
-    MapboxGlDraw.modes.draw_polygon.call(this, state);
+  // Mimic DrawPolygon.onStop logic here
+  this.updateUIClasses({ mouse: cursors.NONE });
+  doubleClickZoom.enable(this);
+  this.activateUIButton();
+
+  // Check if the feature was deleted
+  if (!this.getFeature(state.polygon.id)) return;
+
+  // Remove last added coordinate
+  state.polygon.removeCoordinate(`0.${state.currentVertexPosition}`);
+  if (state.polygon.isValid()) {
+    this.fire(events.CREATE, {
+      features: [state.polygon.toGeoJSON()],
+    });
+  } else {
+    this.deleteFeature([state.polygon.id], { silent: true });
+    this.changeMode(modes.SIMPLE_SELECT, {}, { silent: true });
+  }
+
   setTimeout(() => {
     if (!this.map || !this.map.dragPan) return;
     this.map.dragPan.enable();
