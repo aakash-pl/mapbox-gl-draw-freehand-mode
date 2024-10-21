@@ -19,7 +19,7 @@ FreehandMode.onSetup = function () {
   this.addFeature(polygon);
   this.clearSelectedFeatures();
 
-  // disable dragPan
+  // Disable dragPan
   setTimeout(() => {
     if (!this.map || !this.map.dragPan) return;
     this.map.dragPan.disable();
@@ -57,6 +57,7 @@ FreehandMode.onDrag = FreehandMode.onTouchMove = function (state, e) {
 FreehandMode.onMouseUp = function (state, e) {
   if (state.dragMoving) {
     this.simplify(state.polygon);
+    this.fireCreateEvent(state.polygon);  // Fire create event here
     this.fireUpdate();
     this.changeMode(modes.SIMPLE_SELECT, { featureIds: [state.polygon.id] });
   }
@@ -64,6 +65,13 @@ FreehandMode.onMouseUp = function (state, e) {
 
 FreehandMode.onTouchEnd = function (state, e) {
   this.onMouseUp(state, e);
+};
+
+// Fire the draw.create event when the polygon is completed
+FreehandMode.fireCreateEvent = function (polygon) {
+  this.map.fire(events.CREATE, {
+    features: [polygon.toGeoJSON()],
+  });
 };
 
 FreehandMode.fireUpdate = function () {
@@ -83,7 +91,6 @@ FreehandMode.simplify = function (polygon) {
 };
 
 FreehandMode.onStop = function (state) {
-  // DrawPolygon.call(this, state)
   setTimeout(() => {
     if (!this.map || !this.map.dragPan) return;
     this.map.dragPan.enable();
