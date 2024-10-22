@@ -58,6 +58,9 @@ FreehandMode.onMouseUp = function (state, e) {
   if (state.dragMoving) {
     this.simplify(state.polygon);
     this.fireUpdate();
+    this.map.fire(events.CREATE, {
+      features: [state.polygon.toGeoJSON()],
+    });
     this.changeMode(modes.SIMPLE_SELECT, { featureIds: [state.polygon.id] });
   }
 };
