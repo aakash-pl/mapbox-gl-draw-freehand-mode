@@ -57,7 +57,7 @@ FreehandMode.onDrag = FreehandMode.onTouchMove = function (state, e) {
 FreehandMode.onMouseUp = function (state, e) {
   if (state.dragMoving) {
     this.simplify(state.polygon);
-    this.fireUpdate();
+    // this.fireUpdate();
     this.map.fire(events.CREATE, {
       features: [state.polygon.toGeoJSON()],
     });
