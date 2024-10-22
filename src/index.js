@@ -55,19 +55,6 @@ FreehandMode.onDrag = FreehandMode.onTouchMove = function (state, e) {
 };
 
 FreehandMode.onMouseUp = function (state, e) {
-  state.dragMoving = true;
-  this.updateUIClasses({ mouse: cursors.ADD });
-  state.polygon.updateCoordinate(
-    `0.${state.currentVertexPosition}`,
-    e.lngLat.lng,
-    e.lngLat.lat
-  );
-  state.currentVertexPosition++;
-  state.polygon.updateCoordinate(
-    `0.${state.currentVertexPosition}`,
-    e.lngLat.lng,
-    e.lngLat.lat
-  );
   if (state.dragMoving) {
     this.simplify(state.polygon);
     this.fireUpdate();
