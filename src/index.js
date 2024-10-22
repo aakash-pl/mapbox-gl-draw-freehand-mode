@@ -55,8 +55,19 @@ FreehandMode.onDrag = FreehandMode.onTouchMove = function (state, e) {
 };
 
 FreehandMode.onMouseUp = function (state, e) {
+  state.polygon.updateCoordinate(
+    `0.${state.currentVertexPosition}`,
+    e.lngLat.lng,
+    e.lngLat.lat
+  );
+  state.currentVertexPosition++;
+  state.polygon.updateCoordinate(
+    `0.${state.currentVertexPosition}`,
+    e.lngLat.lng,
+    e.lngLat.lat
+  );
   if (state.dragMoving) {
-    // this.simplify(state.polygon);
+    this.simplify(state.polygon);
     this.fireUpdate();
     this.changeMode(modes.SIMPLE_SELECT, { featureIds: [state.polygon.id] });
   }
