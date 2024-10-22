@@ -56,7 +56,7 @@ FreehandMode.onDrag = FreehandMode.onTouchMove = function (state, e) {
 
 FreehandMode.onMouseUp = function (state, e) {
   if (state.dragMoving) {
-    this.simplify(state.polygon);
+    // this.simplify(state.polygon);
     this.fireUpdate();
     this.changeMode(modes.SIMPLE_SELECT, { featureIds: [state.polygon.id] });
   }
